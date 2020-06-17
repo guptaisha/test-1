@@ -1,7 +1,8 @@
 /**
  * @fileoverview Detects video playback events in the Brightcove player and
  * sends a CustomEvent for each of them.
- *
+ *@version 1.0.0 forked from https://gist.github.com/yuhui/3375b8221f6152600321bdf710dbe90b
+ * @version 2.0.0
  * Although the player is loaded in an IFRAME, Brightcover overwrites
  * `postMessage` with their own function, so you can't post messages between
  * the parent and frame windows.
