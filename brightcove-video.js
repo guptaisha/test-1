@@ -30,14 +30,71 @@ function handlePlaybackEvent_(event) {
     duration: player.duration(),
     name: player.mediainfo.name,
     state: state,
+	id: player.mediainfo.id,
   };
   var eventInit = {
     detail: eventDetail,
   };
-console.log("Player Start")
-  var customEvent = new CustomEvent(state, eventInit);
-  window.aa = eventDetail;
-  player.dispatchEvent(customEvent);
+  
+  
+	
+	var fcurrentTime = player.currentTime();
+	var fduration = player.duration();
+	var fpercentViewed = Math.floor((fcurrentTime/fduration)*100);
+	
+	
+	if (state=="timeupdate" && Math.floor(fpercentViewed / 25)*25==0&& getCookie("pstate")!="0")
+		
+		{
+		document.cookie = "pstate=0"
+		  window.parent.postMessage(eventDetail,"*");
+		}	
+	
+	if (state=="timeupdate" && Math.floor(fpercentViewed / 25)*25==25&& getCookie("pstate")!="25")
+		
+		{
+		document.cookie = "pstate=25"
+		  window.parent.postMessage(eventDetail,"*");
+		  
+		}	
+	
+	if (state=="timeupdate" && Math.floor(fpercentViewed / 25)*25==50&& getCookie("pstate")!="50")
+		
+		{
+		document.cookie = "pstate=50"
+		  window.parent.postMessage(eventDetail,"*");		  
+		}
+	if (state=="timeupdate" && Math.floor(fpercentViewed / 25)*25==75&& getCookie("pstate")!="75")
+		
+		{
+		document.cookie = "pstate=75"
+		  window.parent.postMessage(eventDetail,"*");
+		  
+		}
+	
+	if (state=="ended" && getCookie("pstate")!="ended")
+		
+		{
+		document.cookie = "pstate=ended"
+		  window.parent.postMessage(eventDetail,"*");		  
+		}
+	
+	function getCookie(cname) {
+	  var name = cname + "=";
+	  var decodedCookie = decodeURIComponent(document.cookie);
+	  var ca = decodedCookie.split(';');
+	  for(var i = 0; i <ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+		  c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+		  return c.substring(name.length, c.length);
+		}
+	  }
+	  return "";
+	}
+
 }
 
 /**
@@ -65,8 +122,7 @@ function handleBrightcovePlayers(numTries) {
         var player = this;
         var playerEvents = [
           'ended',
-          'pause',
-          'play',
+		  'timeupdate',
         ];
         playerEvents.forEach(function(playerEvent) {
           player.on(playerEvent, handlePlaybackEvent_);
@@ -77,5 +133,5 @@ function handleBrightcovePlayers(numTries) {
     }
   }
 }
-console.log("**Start3 **")
+document.cookie = "pstate="
 handleBrightcovePlayers(1);
